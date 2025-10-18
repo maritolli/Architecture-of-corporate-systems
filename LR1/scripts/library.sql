@@ -48,7 +48,7 @@ INSERT INTO Reader (name, phone_number) VALUES
                                             ('Иван Иванов', '+7-999-123-45-67'),
                                             ('Петр Петров', '+7-999-987-65-43'),
                                             ('Мария Сидорова', '+7-916-555-44-33'),
-                                            ('Елена Козлова', '+7-925-111-22-33');
+                                            ('Анна Козлова', '+7-925-111-22-33');
 
 INSERT INTO Borrowing (reader_id, book_id, borrow_date) VALUES
                                                             (1, 1, '2024-01-15'),
@@ -56,3 +56,11 @@ INSERT INTO Borrowing (reader_id, book_id, borrow_date) VALUES
                                                             (2, 3, '2024-01-16'),
                                                             (3, 5, '2024-01-17'),
                                                             (4, 7, '2024-01-18');
+
+ALTER TABLE Book
+ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'В библиотеке'
+CHECK (status IN ('В библиотеке', 'На руках'));
+
+UPDATE Book
+SET status = 'На руках'
+WHERE book_id IN (SELECT book_id FROM Borrowing);

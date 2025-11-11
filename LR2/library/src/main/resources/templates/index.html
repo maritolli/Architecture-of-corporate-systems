@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Библиотека</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        button { margin: 5px; padding: 8px 15px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .message { padding: 10px; margin: 10px 0; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+<h1>📚 Библиотека</h1>
+
+<!-- Сообщения -->
+<div th:if="${message}" class="message success" th:text="${message}"></div>
+<div th:if="${error}" class="message error" th:text="${error}"></div>
+
+<div class="section">
+    <h2>Авторы</h2>
+    <table>
+        <tr><th>ID</th><th>Имя</th><th>Страна</th></tr>
+        <tr th:each="author : ${authors}">
+            <td th:text="${author.authorId}"></td>
+            <td th:text="${author.name}"></td>
+            <td th:text="${author.country}"></td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <h2>Книги</h2>
+    <table>
+        <tr><th>Название</th><th>Автор</th><th>Статус</th><th>Заказ</th></tr>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author?.name} ?: '—'"></td>
+            <td th:text="${book.status}"></td>
+            <td>
+                <th:block th:if="${book.status == 'в библиотеке'}">
+                    <form method="post" th:action="@{/order}" style="display:inline;">
+                        <input type="hidden" name="bookId" th:value="${book.bookId}" />
+                        <label>Читатель ID: <input type="number" name="readerId" required min="1" /></label>
+                        <button type="submit">Заказать</button>
+                    </form>
+                </th:block>
+                <span th:unless="${book.status == 'в библиотеке'}">—</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="section">
+    <h2>Выданные книги</h2>
+    <table>
+        <tr><th>Книга</th><th>Читатель</th><th>Дата</th><th>Действия</th></tr>
+        <tr th:each="b : ${borrowings}">
+            <td th:text="${b.book.title}"></td>
+            <td th:text="${b.reader.name}"></td>
+            <td th:text="${b.borrowDate}"></td>
+            <td>
+                <form method="post" th:action="@{/return/{id}(id=${b.borrowingId})}" style="display:inline;">
+                    <button type="submit" onclick="return confirm('Вернуть?')">Вернуть</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

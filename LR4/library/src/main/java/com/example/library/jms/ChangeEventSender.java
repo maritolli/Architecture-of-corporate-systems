@@ -14,6 +14,6 @@ public class ChangeEventSender {
     }
 
     public void send(ChangeEvent event) {
-        jmsTemplate.convertAndSend(JmsConfig.CHANGE_QUEUE, event);
+        jmsTemplate.convertAndSend(JmsConfig.ENTITY_CHANGE_DESTINATION, event);
     }
 }

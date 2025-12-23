@@ -11,7 +11,7 @@ import org.springframework.jms.support.converter.MessageType;
 @EnableJms
 public class JmsConfig {
 
-    public static final String CHANGE_QUEUE = "change.queue";
+    public static final String ENTITY_CHANGE_DESTINATION = "entity.changes.topic";
 
     @Bean
     public MessageConverter jacksonJmsMessageConverter() {
